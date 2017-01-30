@@ -1,0 +1,67 @@
+Neo4j
+1. delete all nodes 
+
+	MATCH (n) DETACH
+	DELETE n
+
+2. proof-of-concept:
+   represents multiple transaction between two node
+   	- add a field call "strength" in the relationship
+   	-  e.g.
+   		CREATE (js:Person { name: "Johan", from: "Sweden", learn: "surfing" }),
+				(ir:Person { name: "Ian", from: "England", title: "author" }),
+				(rvb:Person { name: "Rik", from: "Belgium", pet: "Orval" }),
+				(ally:Person { name: "Allison", from: "California", hobby: "surfing" }),
+				(ee)-[:KNOWS {since: 2001}]->(js),(ee)-[:KNOWS {rating: 5}]->(ir),
+				(js)-[:KNOWS]->(ir),(js)-[:KNOWS]->(rvb),
+				(ir)-[:KNOWS]->(js),(ir)-[:KNOWS]->(ally),
+				(rvb)-[:KNOWS]->(ally)
+
+		
+	- CREATE (ad1: Address1 { name: "xd123145" }),
+		(ad2: Address1 { name: "xd123146" }),
+		(ad3: Address1 { name: "xd123147" }),
+		(ad1)-[:SEND {number:1, acc_value: 15}] -> (ad2),
+		(ad2)-[:SEND {number:2, acc_value: 20}] -> (ad3),
+		(ad3)-[:SEND {number:10, acc_value: 5}] -> (ad1)
+
+		CREATE (ad11: Address1 { name: "xd123149" }),
+		(ad21: Address1 { name: "xd123149" }),
+		(ad11)-[:SEND {number:1, acc_value: 15}] -> (ad21),
+		(ad21)-[:SEND {number:2, acc_value: 20}] -> (ad11)
+
+
+3. query
+
+match (n:Address)-[r]->(m:Address)-[q]->(n:Address)
+return n.name as Address1, m.name as Address2, (r.number + 3 + q.number) as Transactions, (r.acc_value + 19 + q.acc_value) as Value
+order by Transactions desc
+
+
+match (n:Address)-[r]->(m:Address)-[q]->(n:Address)
+return n.name as Sender, m.name as Receiver, r.number as Transactions, r.acc_value as Value
+order by Transactions desc
+
+
+match (n:Address)-[r]->(m:Address)-[w]->(n: Address)
+where r.number + 
+return n.name, m.name
+
+
+
+return n.name, m.name,
+
+case
+
+when n.number + m.number > 0
+
+
+outdegree
+
+match (n:Address)-[r]->()
+
+where r.transactions > 5
+return n.name as Address, count(r) as Outdegree
+
+order by Outdegree desc
+limit 10
